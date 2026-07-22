@@ -9,33 +9,30 @@ node_modules/
 .env.test
 .env.production
 
-# CLaude configuration directory (tools settings, memory, etc.)
+# Claude configuration
 .claude/
 
-# Build & distribution directories
+# Build & distribution
 build/
 dist/
 *.egg-info/
 cover/
-dist/
 htmlcov/
 
-# IDE/Editor
-.vscode
-.idea
+# IDE
+.vscode/
+.idea/
 
 # Temporary files
 *.tmp
 *.log
 *.pot
-*.log.*
 
 # Package caches
 npm-debug.log*
 yarn-debug.log*
 
-# Output files
-*.html
+# Source maps
 *.css.map
 *.js.map
 
@@ -43,17 +40,9 @@ yarn-debug.log*
 .DS_Store
 Thumbs.db
 
-# Version control
+# Merge artifacts
 *.orig
 *~
-
-# Misc
-.DS_Store
-Thumbs.db
-
-# Project-specific includes
-frontend/dist
-backend/dist
 
 # Local backups
 *.backup
