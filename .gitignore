@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.packages
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# CLaude configuration directory (tools settings, memory, etc.)
+.claude/
+
+# Build & distribution directories
+build/
+dist/
+*.egg-info/
+cover/
+dist/
+htmlcov/
+
+# IDE/Editor
+.vscode
+.idea
+
+# Temporary files
+*.tmp
+*.log
+*.pot
+*.log.*
+
+# Package caches
+npm-debug.log*
+yarn-debug.log*
+
+# Output files
+*.html
+*.css.map
+*.js.map
+
+# Operating Systems
+.DS_Store
+Thumbs.db
+
+# Version control
+*.orig
+*~
+
+# Misc
+.DS_Store
+Thumbs.db
+
+# Project-specific includes
+frontend/dist
+backend/dist
+
+# Local backups
+*.backup
