@@ -138,9 +138,14 @@ const getPermissions = async () => {
             });
 
             window.localStream = userMediaStream;
+            console.log("STEP 1");
+            console.log(userMediaStream);
+            console.log(localVideoref.current);
 
             if (localVideoref.current) {
                 localVideoref.current.srcObject = userMediaStream;
+                console.log("STEP 2");
+                console.log(localVideoref.current.srcObject);
             }
         }
 
@@ -169,6 +174,9 @@ const getPermissions = async () => {
 
         window.localStream = stream;
         localVideoref.current.srcObject = stream;
+        console.log("STEP 3");
+        console.log(stream);
+        console.log(localVideoref.current.srcObject);
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue;
