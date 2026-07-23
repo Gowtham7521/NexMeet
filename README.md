@@ -129,24 +129,6 @@ NexMeet/
 └── CLAUDE.md              # Claude Code instructions (optional)
 ```
 
-## Screenshots *(add your own)*
-
-![Landing Page](./FRONTEND/public/landing.png)  
-![Video Call](./FRONTEND/public/videocall.png)  
-![Meeting History](./FRONTEND/public/history.png)
-
-*(Replace placeholder images with actual screenshots or remove the block.)*
-
-## Future Improvements (Resume‑ready roadmap)
-
-- **[Planned]** Integrations** via Clerk)  
-- **[Pl]** Role‑based access (host vs participant) with **LiveKit** or similar SFU for scalable calls  
-- **[Pl]** Server‑side meeting recording & playback  
-- **[Pl]** Host controls: mute/remove participants, pin video, end meeting for all  
-- **[Pl]** Meeting scheduler & personal persistent room links  
-- **[Pl]** Emoji reactions, volume sliders, grid/speaker layout toggle  
-- **[Pl]** Accessibility enhancements (WCAG AA, keyboard navigation, screen‑reader labels)  
-
 ## **🚀 Deployment**
 
 This application is **hosted on an AWS EC2 instance**. You can access the frontend at:
