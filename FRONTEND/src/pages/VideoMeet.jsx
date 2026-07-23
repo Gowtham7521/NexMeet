@@ -62,60 +62,92 @@ export default function VideoMeetComponent() {
         getPermissions();
     }, []);
 
-    let getDisplayMedia = () => {
-        if (screen) {
-            if (navigator.mediaDevices.getDisplayMedia) {
-                navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-                    .then(getDisplayMediaSuccess)
-                    .catch((e) => console.log(e));
-            }
-        }
-    };
+let getDisplayMedia = () => {
+    if (!navigator.mediaDevices) {
+        console.error("MediaDevices API not available");
+        return;
+    }
+
+    if (screen && navigator.mediaDevices.getDisplayMedia) {
+        navigator.mediaDevices
+            .getDisplayMedia({ video: true, audio: true })
+            .then(getDisplayMediaSuccess)
+            .catch(console.error);
+    }
+};
 
     // Bug #12 fixed: reduced from 3 getUserMedia calls to 2 (combined video+audio, then audio-only fallback)
-    const getPermissions = async () => {
-        try {
-            if (navigator.mediaDevices.getDisplayMedia) {
-                setScreenAvailable(true);
-            } else {
-                setScreenAvailable(false);
-            }
-
-            let videoOk = false;
-            let audioOk = false;
-
-            try {
-                const testStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoOk = true;
-                audioOk = true;
-                testStream.getTracks().forEach(t => t.stop());
-            } catch (e) {
-                try {
-                    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    audioOk = true;
-                    audioStream.getTracks().forEach(t => t.stop());
-                } catch (e2) {
-                    console.log('No media permissions granted');
-                }
-            }
-
-            setVideoAvailable(videoOk);
-            setAudioAvailable(audioOk);
-
-            if (videoOk || audioOk) {
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({
-                    video: videoOk,
-                    audio: audioOk
-                });
-                window.localStream = userMediaStream;
-                if (localVideoref.current) {
-                    localVideoref.current.srcObject = userMediaStream;
-                }
-            }
-        } catch (error) {
-            console.log(error);
+const getPermissions = async () => {
+    try {
+        // Check if MediaDevices API exists
+        if (!navigator.mediaDevices) {
+            console.error("navigator.mediaDevices is undefined");
+            setVideoAvailable(false);
+            setAudioAvailable(false);
+            setScreenAvailable(false);
+            return;
         }
-    };
+
+        // Check screen sharing support
+        if (navigator.mediaDevices.getDisplayMedia) {
+            setScreenAvailable(true);
+        } else {
+            setScreenAvailable(false);
+        }
+
+        let videoOk = false;
+        let audioOk = false;
+
+        // Test camera + microphone
+        try {
+            const testStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+
+            videoOk = true;
+            audioOk = true;
+
+            testStream.getTracks().forEach(track => track.stop());
+
+        } catch (err) {
+
+            // If camera fails, try microphone only
+            try {
+                const audioStream = await navigator.mediaDevices.getUserMedia({
+                    audio: true
+                });
+
+                audioOk = true;
+
+                audioStream.getTracks().forEach(track => track.stop());
+
+            } catch (err2) {
+                console.log("No media permissions granted");
+            }
+        }
+
+        setVideoAvailable(videoOk);
+        setAudioAvailable(audioOk);
+
+        // Get the actual stream only if at least one device is available
+        if (videoOk || audioOk) {
+            const userMediaStream = await navigator.mediaDevices.getUserMedia({
+                video: videoOk,
+                audio: audioOk
+            });
+
+            window.localStream = userMediaStream;
+
+            if (localVideoref.current) {
+                localVideoref.current.srcObject = userMediaStream;
+            }
+        }
+
+    } catch (error) {
+        console.error("getPermissions() failed:", error);
+    }
+};
 
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {
@@ -180,18 +212,24 @@ export default function VideoMeetComponent() {
         });
     };
 
-    let getUserMedia = () => {
-        if ((video && videoAvailable) || (audio && audioAvailable)) {
-            navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-                .then(getUserMediaSuccess)
-                .catch((e) => console.log(e));
-        } else {
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-            } catch (e) { }
-        }
-    };
+let getUserMedia = () => {
+    if (!navigator.mediaDevices) {
+        console.error("MediaDevices API not available");
+        return;
+    }
+
+    if ((video && videoAvailable) || (audio && audioAvailable)) {
+        navigator.mediaDevices
+            .getUserMedia({ video, audio })
+            .then(getUserMediaSuccess)
+            .catch(console.error);
+    } else {
+        try {
+            let tracks = localVideoref.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+        } catch (e) {}
+    }
+};
 
     let getDisplayMediaSuccess = (stream) => {
         try {
