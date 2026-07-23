@@ -1,6 +1,8 @@
 # NexMeet
 
-A full‑stack video conferencing application built with React, Vite, Node.js/Express, MongoDB, and WebRTC. Users can register, log in, join meetings via code, share screens, toggle camera/mic, chat in real time, and view a history of past meetings.
+A full‑stack video conferencing application built with React, Vite, Node.js/Express, MongoDB, and WebRTC. Users can register, log in, join meetings via code, share screens, chat in real time, and view a history of past meetings.
+
+Live demo: [http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com](http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com)
 
 ## Features
 
@@ -13,6 +15,7 @@ A full‑stack video conferencing application built with React, Vite, Node.js/Ex
 - **Meeting history** – view past meeting codes and timestamps (MongoDB)  
 - **Responsive UI** – works on desktop and mobile browsers  
 - **Pre‑call lobby** – enter a display name and preview your local video before joining  
+- **AWS EC2 deployment** – the project is hosted on an AWS EC2 instance  
 
 ## Tech Stack
 
@@ -42,7 +45,6 @@ A full‑stack video conferencing application built with React, Vite, Node.js/Ex
 - Git (optional)
 
 ### Installation
-
 1. **Clone the repository**
    ```bash
    git clone https://github.com/Gowtham7521/NexMeet.git
@@ -110,12 +112,17 @@ NexMeet/
 │   ├── src/
 │   │   ├── components/    # (if any)
 │   │   ├── pages/         # Landing, Home, Auth, VideoMeet, History
+│   │   │   ├── Landing.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Auth.jsx
+│   │   │   ├── VideoMeet.jsx
+│   │   │   └── History.jsx
 │   │   ├── contexts/      # AuthContext
 │   │   ├── utils/         # withAuth HOC
 │   │   ├── App.jsx
 │   │   ├── main.jsx
-│   │   ├── index.css
 │   │   └── styles/        # CSS Modules (videoComponent.module.css)
+│   │   └── index.css
 │   ├── package.json
 │   └── .gitignore
 ├── .gitignore             # repo‑wide ignore (node_modules, .env, .claude)
@@ -140,12 +147,21 @@ NexMeet/
 - **[Pl]** Emoji reactions, volume sliders, grid/speaker layout toggle  
 - **[Pl]** Accessibility enhancements (WCAG AA, keyboard navigation, screen‑reader labels)  
 
+## **🚀 Deployment**
+
+This application is **hosted on an AWS EC2 instance**. You can access the frontend at:
+
+> **👉 [http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com](http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com)**
+
+*API endpoints are proxied through Nginx on the same instance, mapping `/api/*` requests to the backend running on port `8000` (or `5000` depending on configuration).*
+
+> **⚠️ Note:** When running locally for development, use your backend's local URL (e.g., `http://localhost:8000/api/v1`) instead of the EC2 hostname.
+
 ## License
 
 This project is provided as‑is for educational and portfolio purposes. Feel free to reuse, modify, and extend it.
 
 ---
-
 **Made with ❤️ by [Your Name]**  
 [GitHub Profile](https://github.com/Gowtham7521)  
 [LinkedIn (optional)](https://www.linkedin.com/in/your‑profile)
