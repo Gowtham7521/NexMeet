@@ -156,12 +156,3 @@ This application is **hosted on an AWS EC2 instance**. You can access the fronte
 *API endpoints are proxied through Nginx on the same instance, mapping `/api/*` requests to the backend running on port `8000` (or `5000` depending on configuration).*
 
 > **⚠️ Note:** When running locally for development, use your backend's local URL (e.g., `http://localhost:8000/api/v1`) instead of the EC2 hostname.
-
-## License
-
-This project is provided as‑is for educational and portfolio purposes. Feel free to reuse, modify, and extend it.
-
----
-**Made with ❤️ by [Your Name]**  
-[GitHub Profile](https://github.com/Gowtham7521)  
-[LinkedIn (optional)](https://www.linkedin.com/in/your‑profile)
