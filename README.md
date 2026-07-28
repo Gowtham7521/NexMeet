@@ -111,7 +111,7 @@ NexMeet/
 │   ├── public/            # static assets
 │   ├── src/
 │   │   ├── components/    # (if any)
-│   │   ├── pages/         # Landing, Home, Auth, VideoMeet, History
+│   │   ├── pages/         # Landing, Home, Auth, LiveMeeting, History
 │   │   │   ├── Landing.jsx
 │   │   │   ├── Home.jsx
 │   │   │   ├── Auth.jsx
