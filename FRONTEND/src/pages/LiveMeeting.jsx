@@ -1,3 +1,4 @@
+// cspell:ignore livekit
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -5,12 +6,7 @@ import {
   VideoConference,
   ControlBar,
   RoomAudioRenderer,
-  useRoomContext,
-  Room,
 } from "@livekit/components-react";
-import { Disconnected, RoomEvent } from "livekit-client";
-import server from "../environment";
-
 
 export default function LiveMeeting() {
   const { url } = useParams();
@@ -24,8 +20,6 @@ export default function LiveMeeting() {
   const [roomError, setRoomError] = useState("");
   const [joinAttempted, setJoinAttempted] = useState(false);
 
-  const room = useRoomContext();
-
   const joinMeeting = useCallback(async () => {
     if (!name.trim()) {
       setError("Enter your name");
@@ -38,7 +32,7 @@ export default function LiveMeeting() {
     setJoinAttempted(true);
 
     try {
-      const response = await fetch(`${server}/api/v1/livekit/token`, {
+      const response = await fetch(`${process.env.VITE_BACKEND_URL || "http://localhost:8000"}/api/v1/livekit/token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,34 +58,23 @@ export default function LiveMeeting() {
     }
   }, [name, url]);
 
-  // Handle LiveKit room errors
-  useEffect(() => {
-    if (!room) return;
+  const handleRoomError = (error) => {
+    console.error("LiveKit Room Error:", error);
+    setRoomError(`Connection error: ${error.message || "Unknown error"}`);
+  };
 
-    const handleRoomError = (error) => {
-      console.error("LiveKit Room Error:\", error);
-      setRoomError(`Connection error: ${error.message || "Unknown error"}`);
-    };
-
-    const handleDisconnected = (reason) => {
-      console.log("Disconnected:", reason);
-      if (reason?.reason === "network") {
-        setRoomError("Network connection lost. Please check your connection.");
-      } else if (reason) {
-        setRoomError(`Disconnected: ${reason}`);
-      } else {
-        navigate("/");
-      }
-    };
-
-    room.on(RoomEvent.Error, handleRoomError);
-    room.on(RoomEvent.Disconnected, handleDisconnected);
-
-    return () => {
-      room.off(RoomEvent.Error, handleRoomError);
-      room.off(RoomEvent.Disconnected, handleDisconnected);
-    };
-  }, [room, navigate]);
+  const handleDisconnected = (reason) => {
+    console.log("Disconnected:", reason);
+    if (reason?.reason === "network") {
+      setRoomError("Network connection lost. Please check your connection.");
+    } else if (reason) {
+      setRoomError(`Disconnected: ${reason}`);
+    }
+    // Only navigate on explicit disconnect, not error
+    if (reason?.reason !== "error") {
+      navigate("/");
+    }
+  };
 
   if (!token) {
     return (
@@ -175,7 +158,8 @@ export default function LiveMeeting() {
       connect={true}
       video={true}
       audio={true}
-      onDisconnected={() => navigate("/")}
+      onDisconnected={handleDisconnected}
+      onError={handleRoomError}
       style={{ height: "100vh" }}
       data-lk-theme="default"
       audioDefaultOutputDeviceId={undefined}
