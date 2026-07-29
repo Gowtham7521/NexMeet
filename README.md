@@ -2,7 +2,7 @@
 
 A full‑stack video conferencing application built with React, Vite, Node.js/Express, MongoDB, and WebRTC. Users can register, log in, join meetings via code, share screens, chat in real time, and view a history of past meetings.
 
-Live demo: [http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com](http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com)
+Live demo: [https://nexmeet-app.duckdns.org/](https://nexmeet-app.duckdns.org/)
 
 ## Features
 
@@ -133,7 +133,7 @@ NexMeet/
 
 This application is **hosted on an AWS EC2 instance**. You can access the frontend at:
 
-> **👉 [http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com](http://ec2-16-112-213-195.ap-south-2.compute.amazonaws.com)**
+> **👉 [https://nexmeet-app.duckdns.org/](https://nexmeet-app.duckdns.org/)**
 
 *API endpoints are proxied through Nginx on the same instance, mapping `/api/*` requests to the backend running on port `8000` (or `5000` depending on configuration).*
 
