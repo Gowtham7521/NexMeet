@@ -479,50 +479,28 @@ let getUserMedia = () => {
     };
 
     return (
-        <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#020617' }}>
+        <div>
             {askForUsername === true ? (
                 <div className={styles.lobbyContainer}>
                     <div className={styles.lobbyCard}>
-                        <h2 className={styles.lobbyTitle}>Ready to Join?</h2>
-                        <p className={styles.lobbySubtitle}>Enter your display name to join the meeting room</p>
-                        
+                        <h2>Enter into Lobby</h2>
+                        <TextField
+                            id="outlined-basic"
+                            label="Username"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            variant="outlined"
+                            fullWidth
+                            sx={{
+                                '& .MuiOutlinedInput-root': { color: 'white', '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' } },
+                                '& .MuiInputLabel-root': { color: '#94a3b8' }
+                            }}
+                        />
+                        <Button variant="contained" onClick={connect} disabled={!username.trim()} fullWidth>
+                            Connect
+                        </Button>
                         <div className={styles.lobbyVideoPreview}>
                             <video ref={localVideoref} autoPlay muted playsInline></video>
-                            <div className={styles.userLabel}>
-                                <PersonIcon style={{ fontSize: 16 }} /> Camera Preview
-                            </div>
-                        </div>
-
-                        <div className={styles.lobbyInputContainer}>
-                            <TextField
-                                id="outlined-basic"
-                                label="Your Display Name"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
-                                variant="outlined"
-                                fullWidth
-                                placeholder="e.g. Alex"
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        color: '#ffffff',
-                                        borderRadius: '12px',
-                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
-                                        '&:hover fieldset': { borderColor: '#3b82f6' },
-                                        '&.Mui-focused fieldset': { borderColor: '#3b82f6' },
-                                    },
-                                    '& .MuiInputLabel-root': { color: '#94a3b8' },
-                                    '& .MuiInputLabel-root.Mui-focused': { color: '#3b82f6' }
-                                }}
-                            />
-                            <Button
-                                className={styles.joinButton}
-                                variant="contained"
-                                onClick={connect}
-                                disabled={!username.trim()}
-                                fullWidth
-                            >
-                                Join Meeting
-                            </Button>
                         </div>
                     </div>
                 </div>
@@ -531,42 +509,35 @@ let getUserMedia = () => {
                     {!isSecureContext && (
                         <div style={{
                             position: 'absolute',
-                            top: 16,
+                            top: 10,
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            backgroundColor: '#ef4444',
+                            backgroundColor: '#ff4d4f',
                             color: 'white',
-                            padding: '10px 24px',
-                            borderRadius: '30px',
+                            padding: '10px 20px',
+                            borderRadius: '8px',
                             zIndex: 1000,
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            boxShadow: '0 8px 24px rgba(239, 68, 68, 0.4)'
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                         }}>
-                            ⚠️ Camera & Microphone blocked on HTTP. Please use HTTPS.
+                            ⚠️ Camera & Microphone are blocked because this site is loaded over HTTP (Insecure). Please use HTTPS or enable unsafely-treat-insecure-origin-as-secure in Chrome.
                         </div>
                     )}
 
-                    {/* Main Video Conference Grid */}
-                    <div
-                        className={styles.conferenceView}
-                        style={{
-                            gridTemplateColumns: videos.length === 0 ? '1fr' :
-                                videos.length === 1 ? '1fr' :
-                                videos.length === 2 ? 'repeat(2, 1fr)' :
-                                'repeat(auto-fit, minmax(320px, 1fr))'
-                        }}
-                    >
+                    {/* Main Video View */}
+                    <div className={styles.conferenceView} style={{
+                        gridTemplateColumns: videos.length <= 1 ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
+                        paddingRight: showModal ? '360px' : '20px'
+                    }}>
                         {videos.length === 0 ? (
-                            <div className={styles.videoCard} style={{ maxWidth: '960px', height: '76vh', margin: '0 auto' }}>
+                            <div className={styles.videoWrapper}>
                                 <video ref={localVideoref} autoPlay muted playsInline></video>
-                                <div className={styles.userLabel}>
-                                    <PersonIcon style={{ fontSize: 16 }} /> {username || "You"} (Waiting for others to join...)
-                                </div>
+                                <div className={styles.participantLabel}>You (Solo in call)</div>
                             </div>
                         ) : (
                             videos.map((videoItem) => (
-                                <div className={styles.videoCard} key={videoItem.socketId}>
+                                <div className={styles.videoWrapper} key={videoItem.socketId}>
                                     <video
                                         data-socket={videoItem.socketId}
                                         ref={ref => {
@@ -577,127 +548,71 @@ let getUserMedia = () => {
                                         autoPlay
                                         playsInline
                                     ></video>
-                                    <div className={styles.userLabel}>
-                                        <PersonIcon style={{ fontSize: 16 }} /> Participant ({videoItem.socketId.substring(0, 5)})
-                                    </div>
+                                    <div className={styles.participantLabel}>Participant ({videoItem.socketId.substring(0, 5)})</div>
                                 </div>
                             ))
                         )}
                     </div>
 
-                    {/* Floating Self-View Picture-in-Picture Card (when remote users exist) */}
+                    {/* Local Self-View PIP (only when remote users exist) */}
                     {videos.length > 0 && (
-                        <div className={styles.meetUserVideoCard}>
-                            <video ref={localVideoref} autoPlay muted playsInline></video>
-                            <div className={styles.userLabel} style={{ bottom: 6, left: 6, fontSize: 11, padding: '3px 8px' }}>
-                                You
-                            </div>
-                        </div>
+                        <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted playsInline></video>
                     )}
 
-                    {/* Glass Control Bar */}
+                    {/* Bottom Floating Control Bar */}
                     <div className={styles.buttonContainers}>
-                        <Tooltip title={video ? "Turn Camera Off" : "Turn Camera On"}>
-                            <IconButton
-                                onClick={handleVideo}
-                                className={`${styles.controlBtn} ${video ? styles.controlBtnActive : styles.controlBtnOff}`}
-                            >
-                                {video ? <VideocamIcon /> : <VideocamOffIcon />}
+                        <IconButton onClick={handleVideo} style={{ color: "white" }}>
+                            {video ? <VideocamIcon /> : <VideocamOffIcon />}
+                        </IconButton>
+                        <IconButton onClick={handleEndCall} style={{ color: "red" }}>
+                            <CallEndIcon />
+                        </IconButton>
+                        <IconButton onClick={handleAudio} style={{ color: "white" }}>
+                            {audio ? <MicIcon /> : <MicOffIcon />}
+                        </IconButton>
+
+                        {screenAvailable ?
+                            <IconButton onClick={handleScreen} style={{ color: "white" }}>
+                                {screen ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                            </IconButton> : <></>}
+
+                        <Badge badgeContent={newMessages} max={999} color='warning'>
+                            <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
+                                <ChatIcon />
                             </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title={audio ? "Mute Microphone" : "Unmute Microphone"}>
-                            <IconButton
-                                onClick={handleAudio}
-                                className={`${styles.controlBtn} ${audio ? styles.controlBtnActive : styles.controlBtnOff}`}
-                            >
-                                {audio ? <MicIcon /> : <MicOffIcon />}
-                            </IconButton>
-                        </Tooltip>
-
-                        {screenAvailable && (
-                            <Tooltip title={screen ? "Stop Sharing" : "Share Screen"}>
-                                <IconButton
-                                    onClick={handleScreen}
-                                    className={`${styles.controlBtn} ${screen ? styles.controlBtnOff : styles.controlBtnActive}`}
-                                >
-                                    {screen ? <StopScreenShareIcon /> : <ScreenShareIcon />}
-                                </IconButton>
-                            </Tooltip>
-                        )}
-
-                        <Tooltip title="In-Call Chat">
-                            <Badge badgeContent={newMessages} max={99} color='error'>
-                                <IconButton
-                                    onClick={() => setModal(!showModal)}
-                                    className={`${styles.controlBtn} ${showModal ? styles.controlBtnActive : styles.controlBtnActive}`}
-                                >
-                                    <ChatIcon />
-                                </IconButton>
-                            </Badge>
-                        </Tooltip>
-
-                        <Tooltip title="Leave Call">
-                            <IconButton onClick={handleEndCall} className={styles.endCallBtn}>
-                                <CallEndIcon />
-                            </IconButton>
-                        </Tooltip>
+                        </Badge>
                     </div>
 
-                    {/* In-Call Chat Side Drawer */}
+                    {/* White Chat Panel */}
                     {showModal && (
                         <div className={styles.chatRoom}>
                             <div className={styles.chatContainer}>
                                 <div className={styles.chatHeader}>
-                                    <h2>In-Call Messages</h2>
-                                    <IconButton onClick={closeChat} style={{ color: '#94a3b8' }}>
+                                    <h1>Chat</h1>
+                                    <IconButton onClick={closeChat} style={{ color: "#64748b" }}>
                                         <CloseIcon />
                                     </IconButton>
                                 </div>
                                 <div className={styles.chattingDisplay}>
-                                    {messages.length !== 0 ? (
-                                        messages.map((item, index) => {
-                                            const isSelf = item.sender === username;
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className={`${styles.messageGroup} ${isSelf ? styles.ownMessageGroup : styles.otherMessageGroup}`}
-                                                >
-                                                    <span className={styles.senderName}>{item.sender}</span>
-                                                    <div className={`${styles.messageBubble} ${isSelf ? styles.ownMessageBubble : styles.otherMessageBubble}`}>
-                                                        {item.data}
-                                                    </div>
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <p className={styles.emptyChat}>No messages yet. Say hello!</p>
-                                    )}
+                                    {messages.length !== 0 ? messages.map((item, index) => (
+                                        <div className={styles.chatMessageItem} key={index}>
+                                            <p className={styles.chatSender}>{item.sender}</p>
+                                            <p className={styles.chatText}>{item.data}</p>
+                                        </div>
+                                    )) : <p style={{ color: "#64748b" }}>No Messages Yet</p>}
                                 </div>
                                 <div className={styles.chattingArea}>
                                     <TextField
-                                        className={styles.chatInput}
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
                                         onKeyPress={(e) => { if (e.key === 'Enter') sendMessage(); }}
                                         id="chat-input"
-                                        placeholder="Send a message..."
+                                        label="Enter Your chat"
                                         variant="outlined"
                                         size="small"
-                                        sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                color: '#ffffff',
-                                                borderRadius: '12px',
-                                                background: 'rgba(255, 255, 255, 0.05)',
-                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
-                                                '&:hover fieldset': { borderColor: '#3b82f6' },
-                                                '&.Mui-focused fieldset': { borderColor: '#3b82f6' },
-                                            }
-                                        }}
+                                        fullWidth
                                     />
-                                    <Button className={styles.sendButton} variant='contained' onClick={sendMessage}>
-                                        <SendIcon style={{ fontSize: 20 }} />
-                                    </Button>
+                                    <Button variant='contained' onClick={sendMessage} style={{ height: "40px" }}>Send</Button>
                                 </div>
                             </div>
                         </div>
