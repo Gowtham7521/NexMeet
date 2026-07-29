@@ -8,6 +8,8 @@ import {
   RoomAudioRenderer,
 } from "@livekit/components-react";
 
+import server from "../environment";
+
 export default function LiveMeeting() {
   const { url } = useParams();
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export default function LiveMeeting() {
     setJoinAttempted(true);
 
     try {
-      const response = await fetch(`${process.env.VITE_BACKEND_URL || "http://localhost:8000"}/api/v1/livekit/token`, {
+      const response = await fetch(`${server}/api/v1/livekit/token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

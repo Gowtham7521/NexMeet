@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/landing';
 import Authentication from './pages/authentication';
 import { AuthProvider } from './contexts/AuthContext';
-// import VideoMeetComponent from './pages/VideoMeet';
+import VideoMeetComponent from './pages/VideoMeet';
 import LiveMeeting from './pages/LiveMeeting';
 import HomeComponent from './pages/home';
 import History from './pages/history';
@@ -17,7 +17,8 @@ function App() {
           <Route path="/auth" element={<Authentication />} />
           <Route path="/home" element={<HomeComponent />} />
           <Route path="/history" element={<History />} />
-          <Route path="/:url" element={<LiveMeeting />} />
+          <Route path="/:url" element={<VideoMeetComponent />} />
+          <Route path="/livekit/:url" element={<LiveMeeting />} />
         </Routes>
       </AuthProvider>
     </Router>
