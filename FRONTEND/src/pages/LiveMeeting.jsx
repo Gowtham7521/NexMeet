@@ -8,6 +8,7 @@ import {
   RoomAudioRenderer,
 } from "@livekit/components-react";
 
+import styles from "../styles/videoComponent.module.css";
 import server from "../environment";
 
 export default function LiveMeeting() {
@@ -72,7 +73,6 @@ export default function LiveMeeting() {
     } else if (reason) {
       setRoomError(`Disconnected: ${reason}`);
     }
-    // Only navigate on explicit disconnect, not error
     if (reason?.reason !== "error") {
       navigate("/");
     }
@@ -80,75 +80,69 @@ export default function LiveMeeting() {
 
   if (!token) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          flexDirection: "column",
-          gap: 20,
-          background: "#111",
-          color: "white",
-        }}
-      >
-        <h1>NexMeet Lobby</h1>
-        <h3>Room: {url}</h3>
+      <div className={styles.lobbyContainer}>
+        <div className={styles.lobbyCard}>
+          <h2>Enter into Lobby</h2>
+          <h3>Room: {url}</h3>
 
-        <input
-          value={name}
-          placeholder="Enter your name"
-          onChange={(e) => setName(e.target.value)}
-          style={{
-            width: 300,
-            padding: 12,
-            borderRadius: 8,
-            fontSize: 16,
-            border: "1px solid #444",
-            background: "#222",
-            color: "white",
-          }}
-          onKeyPress={(e) => e.key === "Enter" && joinMeeting()}
-        />
+          <input
+            value={name}
+            placeholder="Enter your name"
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 16,
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(255,255,255,0.05)",
+              color: "white",
+              boxSizing: "border-box",
+            }}
+            onKeyPress={(e) => e.key === "Enter" && joinMeeting()}
+          />
 
-        <button
-          onClick={joinMeeting}
-          disabled={loading}
-          style={{
-            padding: "12px 24px",
-            cursor: "pointer",
-            fontSize: 16,
-            background: loading ? "#555" : "#1976d2",
-            color: "white",
-            border: "none",
-            borderRadius: 8,
-            transition: "background 0.3s",
-          }}
-        >
-          {loading ? "Joining..." : "Join Meeting"}
-        </button>
+          <button
+            onClick={joinMeeting}
+            disabled={loading || !name.trim()}
+            style={{
+              width: "100%",
+              padding: "12px",
+              cursor: "pointer",
+              fontSize: 16,
+              fontWeight: "bold",
+              background: loading ? "#555" : "#1976d2",
+              color: "white",
+              border: "none",
+              borderRadius: 8,
+              transition: "background 0.3s",
+            }}
+          >
+            {loading ? "JOINING..." : "CONNECT"}
+          </button>
 
-        {error && <p style={{ color: "#ff6b6b" }}>{error}</p>}
+          {error && <p style={{ color: "#ff6b6b" }}>{error}</p>}
 
-        {roomError && (
-          <div style={{ color: "#ff6b6b", textAlign: "center" }}>
-            <p>{roomError}</p>
-            <button
-              onClick={() => setRoomError("")}
-              style={{
-                marginTop: 10,
-                padding: "8px 16px",
-                background: "#333",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                cursor: "pointer",
-              }}
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
+          {roomError && (
+            <div style={{ color: "#ff6b6b", textAlign: "center" }}>
+              <p>{roomError}</p>
+              <button
+                onClick={() => setRoomError("")}
+                style={{
+                  marginTop: 10,
+                  padding: "8px 16px",
+                  background: "#333",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                }}
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-/* Original Theme Restored & Layout Fixed */
+/* Uniform Navy Blue Theme & Layout */
 .meetVideoContainer {
     position: relative;
     width: 100vw;
@@ -9,7 +9,7 @@
     color: white;
 }
 
-/* Lobby Styling matching the original theme */
+/* Uniform Navy Blue Lobby Styling */
 .lobbyContainer {
     width: 100vw;
     height: 100vh;
@@ -22,7 +22,7 @@
 }
 
 .lobbyCard {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
     padding: 32px;
@@ -33,33 +33,36 @@
     max-width: 440px;
     width: 90%;
     text-align: center;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
 }
 
 .lobbyCard h2 {
     font-size: 1.6rem;
     font-weight: 600;
     margin: 0;
+    color: #ffffff;
+}
+
+.lobbyCard h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin: -10px 0 0 0;
 }
 
 .lobbyVideoPreview {
     width: 100%;
-    height: 220px;
+    height: 230px;
     border-radius: 12px;
     overflow: hidden;
     background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .lobbyVideoPreview video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.lobbyInputContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
 }
 
 /* Main Video Area */

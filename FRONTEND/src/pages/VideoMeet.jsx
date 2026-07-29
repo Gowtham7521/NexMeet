@@ -492,12 +492,33 @@ let getUserMedia = () => {
                             variant="outlined"
                             fullWidth
                             sx={{
-                                '& .MuiOutlinedInput-root': { color: 'white', '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' } },
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    borderRadius: '8px',
+                                    '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+                                    '&:hover fieldset': { borderColor: '#1976d2' },
+                                    '&.Mui-focused fieldset': { borderColor: '#1976d2' },
+                                },
                                 '& .MuiInputLabel-root': { color: '#94a3b8' }
                             }}
                         />
-                        <Button variant="contained" onClick={connect} disabled={!username.trim()} fullWidth>
-                            Connect
+                        <Button
+                            variant="contained"
+                            onClick={connect}
+                            disabled={!username.trim()}
+                            fullWidth
+                            sx={{
+                                height: '44px',
+                                borderRadius: '8px',
+                                fontWeight: 'bold',
+                                fontSize: '15px',
+                                backgroundColor: '#1976d2',
+                                color: '#ffffff',
+                                '&:hover': { backgroundColor: '#1565c0' },
+                                '&.Mui-disabled': { backgroundColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.3)' }
+                            }}
+                        >
+                            CONNECT
                         </Button>
                         <div className={styles.lobbyVideoPreview}>
                             <video ref={localVideoref} autoPlay muted playsInline></video>
